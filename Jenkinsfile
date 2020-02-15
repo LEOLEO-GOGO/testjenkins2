@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Call DownStream') {
       steps {
-        build "../testjekins/$GIT_BRANCH", wait: true, propagate: true
+        build "../testjekins/$GIT_BRANCH", "wait": true, "propagate": true
       }
     }
   }
