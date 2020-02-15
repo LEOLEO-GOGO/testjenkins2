@@ -10,7 +10,8 @@ pipeline {
         build '../testjekins/$GIT_BRANCH', wait: true, propagate: true
       }
     }
-
+  }
+  
   post {
     always {
         echo "pipeline2 finished!"
