@@ -7,6 +7,7 @@ pipeline {
   stages {
     stage('Call DownStream') {
       steps {
+        echo "changesets: ${currentBuild.changeSets}"
         build job: "../test-jenkins/$GIT_BRANCH", parameters: [
                   booleanParam(name: 'triggeredByUpstream', value: true)
                 ], wait: true, propagate: true
