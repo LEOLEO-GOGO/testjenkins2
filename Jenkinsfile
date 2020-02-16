@@ -10,7 +10,7 @@ pipeline {
         script{
           //调用方法得到日志 并 输出
           def changeString = getChangeString()
-          echo "$changeString"
+          echo "changes: $changeString"
         }
         build job: "../test-jenkins/$GIT_BRANCH", parameters: [
                   booleanParam(name: 'triggeredByUpstream', value: true)
