@@ -7,7 +7,11 @@ pipeline {
   stages {
     stage('Call DownStream') {
       steps {
-        echo "changesets: ${currentBuild.changeSets}"
+        script{
+          //调用方法得到日志 并 输出
+          def changeString = getChangeString()
+          echo "$changeString"
+        }
         build job: "../test-jenkins/$GIT_BRANCH", parameters: [
                   booleanParam(name: 'triggeredByUpstream', value: true)
                 ], wait: true, propagate: true
@@ -28,5 +32,29 @@ pipeline {
     failure {
       echo "pipeline2 failed!"
     }
+  }
+
+  @NonCPS
+  def getChangeString() {
+    MAX_MSG_LEN = 100
+    def changeString = ""
+
+    echo "Gathering SCM changes"
+    def changeLogSets = currentBuild.changeSets
+    for (int i = 0; i < changeLogSets.size(); i++) {
+        def entries = changeLogSets[i].items
+        for (int j = 0; j < entries.length; j++) {
+          def entry = entries[j]
+          affectedPaths = entry.affectedPaths
+          for (int k = 0; k < affectedPaths.length; k++) {
+            affectedPath = affectedPaths[k]
+            changeString += " - ${affectedPath} [${entry.author}]\n"
+          }
+        }
+    }
+    if (!changeString) {
+        changeString = " - No new changes"
+    }
+    return changeString
   }
 }
